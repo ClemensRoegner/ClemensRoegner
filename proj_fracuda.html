@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+     <title>FraCuda by Clemens R&ouml;gner</title>
+
+     <style type="text/css">
+        * { margin: 0; padding: 0; }
+        body { font: 16px Helvetica, Sans-Serif; line-height: 24px; background: url(images/noise.jpg); }
+        .clear { clear: both; }
+        #page-wrap { width: 800px; margin: 40px auto 60px; }
+        #pic { float: right; margin: -30px 0 0 0; }
+        h1 { margin: 0 0 16px 0; padding: 0 0 16px 0; font-size: 42px; font-weight: bold; letter-spacing: -2px; border-bottom: 1px solid #999; }
+        h2 { font-size: 20px; margin: 0 0 6px 0; position: relative; }
+        h2 span { position: absolute; bottom: 0; right: 0; font-style: italic; font-family: Georgia, Serif; font-size: 16px; color: #999; font-weight: normal; }
+        p { margin: 0 0 16px 0; }
+        a { color: #999; text-decoration: none; border-bottom: 1px dotted #999; }
+        a:hover { border-bottom-style: solid; color: black; }
+        ul { margin: 0 0 32px 17px; }
+        #objective { width: 500px; float: left; }
+        #objective p { font-family: Georgia, Serif; font-style: italic; color: #666; }
+        dt { font-style: italic; font-weight: bold; font-size: 18px; text-align: right; padding: 0 26px 0 0; width: 150px; float: left; height: 100px; border-right: 1px solid #999;  }
+        dd { width: 600px; float: right; }
+        dd.clear { float: none; margin: 0; height: 15px; }
+     </style>
+</head>
+
+<body>
+
+    <div id="page-wrap">
+    
+        <img src="images/fracuda_title.png" alt="Profile Pic" id="pic" />
+    
+        <div id="contact-info" class="vcard">
+        
+            <!-- Microformats! -->
+        
+            <h1 class="fn">FraCuda</h1>
+        
+            <p>
+                Bachelor Thesis by Clemens R&ouml;gner
+            </p>
+        </div>
+                
+        <div id="objective">
+            <p>
+                FraCuda is a fractal renderer using CUDA. It features a real-time application to explore the fractal and save interesting camera positions. Those camera positions then can be used to render high quality images with the corresponding application. This project was part of my Bachelor Thesis, which contains additional informations about fractals in general and the application.
+            </p>
+        </div>
+        
+        <div class="clear"></div>
+        
+        <dl>
+            <dd class="clear"></dd>
+            
+            <dt style="height: 250px;">Documents</dt>
+            <dd>
+                <h2>Bachelor Thesis <span>Please don't look</span></h2>
+                <p> As mentioned before the Thesis contains additional information, such as a small essay on fractals and the theory on rendering them. Furthermore it explains the problems that came up during the implementation and discusses the effects I used in it. The thesis can be found <a href="pdf/FraCuda Paper Bachelor.pdf">here (Bachelor Thesis format)</a>. </p>
+				<h2>Usage <span>One person read it!</span></h2>
+                <p> In addition to the Thesis, which explains the theory, I wrote a document that explains the practical work flow of the application. It can be found <a href="pdf/FraCuda Usage.pdf">here</a>.</p>
+            </dd>
+            
+            <dd class="clear"></dd>
+            
+            <dt style="height: 950px;">Real-Time application</dt>
+            <dd>
+                <h2>General <span>Now or never</span></h2>
+                <p>The real-time rendering application serves two purposes: the exploring of the fractal and saving interesting camera shots so they can be rendered in high quality later on. This part of the application uses faster float-operations and no over sampling. Furthermore progressive refinement is used when the camera position is changed to enable responsive user controlling of the camera.</p>
+                
+                <h2>Visual Material</h2>
+                <p>Sadly I was unable to capture a video of the usage, but i will try it again. The picture below shows the same scene with and without progressive refinement:</p>
+				
+				<img src="images/progr.png" width="100%" height="100%"/>
+                
+            </dd>
+			
+            <dd class="clear"></dd>
+            
+            <dt style="height: 880px;">High Quality Renderer</dt>
+            <dd>
+                <h2>General <span>Wait longer..</span></h2>
+                <p>The high quality renderer runs in CUDA as well with all the parameters turned up to get the best visual quality.</p>
+                
+                
+                <h2>Visual Material</h2>
+				<p>The video below was rendered in several hours:</p>
+				<iframe width="560" height="315" src="http://www.youtube.com/embed/oSh6VXOsP2I" frameborder="0" allowfullscreen></iframe>
+				<p>The picture below is a <a href="images/fracuda.png" >single frame</a> of that video generated in 2 minutes:</p>
+				<img src="images/fracuda.png" width="100%" height="100%" />
+            </dd>
+            
+            <dd class="clear"></dd>
+			
+			<dt style="height: 260px;">Effects and Features</dt>
+            <dd>
+                <h2>Visual Effects <span>Eyecandy</span></h2>
+                <ul>
+                    <li>Screen Space Ambient Occlusion techniques: The original method and Horizon Based Ambient Occlusion</li>
+                    <li>Bloom</li>
+                    <li>HDR rendering with Reinhardt Tone Mapper</li>
+                </ul>
+                
+                <h2>Other Features <span>More of the good stuff</span></h2>
+                <ul>
+                    <li>Point Lights and Environment Lights</li>
+                    <li>Different modes for direct lighting: No shadow, ray-casted shadows</li>
+                    <li>Stereoscopic 3D rendering</li>
+                </ul>
+            </dd>
+            
+            <dd class="clear"></dd>
+
+        </dl>
+        
+        <div class="clear"></div>
+    
+    </div>
+
+</body>
+
+</html>

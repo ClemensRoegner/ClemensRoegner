@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+     <title>MaximalBlink by Clemens R&ouml;gner</title>
+
+     <style type="text/css">
+        * { margin: 0; padding: 0; }
+        body { font: 16px Helvetica, Sans-Serif; line-height: 24px; background: url(images/noise.jpg); }
+        .clear { clear: both; }
+        #page-wrap { width: 800px; margin: 40px auto 60px; }
+        #pic { float: right; margin: -30px 0 0 0; }
+        h1 { margin: 0 0 16px 0; padding: 0 0 16px 0; font-size: 42px; font-weight: bold; letter-spacing: -2px; border-bottom: 1px solid #999; }
+        h2 { font-size: 20px; margin: 0 0 6px 0; position: relative; }
+        h2 span { position: absolute; bottom: 0; right: 0; font-style: italic; font-family: Georgia, Serif; font-size: 16px; color: #999; font-weight: normal; }
+        p { margin: 0 0 16px 0; }
+        a { color: #999; text-decoration: none; border-bottom: 1px dotted #999; }
+        a:hover { border-bottom-style: solid; color: black; }
+        ul { margin: 0 0 32px 17px; }
+        #objective { width: 500px; float: left; }
+        #objective p { font-family: Georgia, Serif; font-style: italic; color: #666; }
+        dt { font-style: italic; font-weight: bold; font-size: 18px; text-align: right; padding: 0 26px 0 0; width: 150px; float: left; height: 100px; border-right: 1px solid #999;  }
+        dd { width: 600px; float: right; }
+        dd.clear { float: none; margin: 0; height: 15px; }
+     </style>
+</head>
+
+<body>
+
+    <div id="page-wrap">
+    
+        <img src="images/maxblink_title.png" alt="MaximalBlink Title Pic" id="pic" />
+    
+        <div id="contact-info" class="vcard">
+        
+            <!-- Microformats! -->
+        
+            <h1 class="fn">MaximalBlink</h1>
+        
+            <p>
+                Master Thesis by Clemens R&ouml;gner
+            </p>
+        </div>
+                
+        <div id="objective">
+            <p>
+				My Master Thesis is based on an idea from Johannes Hanika from the Karlsruhe Institute of Technology, where i spent 6 months of implementing the new algorithm under his supervision. The new technique does upsampling in rendering sequences by using a non-local means denoising algorithm to find similar pixels in adjacent frames. As of now, the implementation is finished, but the actual writing of the thesis is not yet done.
+            </p>
+        </div>
+        
+        <div class="clear"></div>
+        
+        <dl>
+            <dd class="clear"></dd>
+            
+            <dt style="height: 1000px;">How it works</dt>
+            <dd>
+                <h2>Non-local means <span>For denoising</span></h2>
+                <p> The non-local means denoising algorithm works as follows: it calculates a new value for pixel <i>a</i> by looking into the spatial neighbourhood <i>H</i>. For each pixel <i>b</i> of the neighbourhood a weight is calculated that will determine how much that pixel contributes to the new value. This weight depends on the difference between the surrounding <i>S</i> of both pixels. This is done by comparing each pixel in that surrounding:</p>
+					<center><img src="images/nlmeans.png" alt="nlmeans description" width="25%" height="25%"/></center><br/>
+					For a more in-depth look see the paper <a href="http://www.academia.edu/868305/An_improved_non-local_denoising_algorithm">'An Improved Non-Local Denoising Algorithm'</a> of Goosens et al. or the <a href="http://link.springer.com/chapter/10.1007%2F978-3-642-17691-3_5">GPU adoption of the algorithm</a>, which rearranges the calculations so the benifit execution on the GPU (and the CPU as well). In the Master Thesis the similarity weight between two pixels is taken as an indicator on how likely one pixel moved to another ones location in an adjacent frame of a sequence. 
+				</p>
+				
+				<h2>Motion Vector Technique <span>AKA optical flow</span></h2>
+                <p>  This technique takes the color information from two ground truth frames and applies the non-local means algorithm on them to calculate the movement of the pixels. Now it is possible to approximate the frame in between those two frames via a so called iterative searc which was proposed by Yang et al. in <a href="http://research.microsoft.com/en-us/um/people/hoppe/proj/bireproj/">'Image-space bidirectional scene reprojection'</a>. This iterative search looks up the source pixel of every position in the frame. The following image depicts how this is done for a target pixel <i>T</i> and source pixel <i>S</i> with the motion vector <i>m</i>: 
+					<img src="images/iterative_search.png" alt="iterative_search description" width="100%" height="100%"/>
+				</p>
+				
+				<h2>Pixel Similarity Technique <span>The better one</span></h2>
+                <p> This technique works with meta-data of a pixel instead of its color. The first step of this technique is to render the frame in between two ground-truth frames without the light transport, but with the meta-data. Then the non-local means algorithm can be used to find similar pixels and use their color to generate the missing frame. The meta-data consists of spatial information and information about the incoming light. </p>
+            </dd>
+            
+            <dd class="clear"></dd>
+            
+            <dt style="height: 510px;">Results</dt>
+            <dd>
+                <h2>Ground truth <span>60 fps rocks</span></h2>
+                <p> The test sequence consists of three scenes featuring:
+					<ul>
+					<li>two rotating and reflective cubes</li>
+					<li>a diffuse object that changes its size</li>
+					<li>a transparent and rotating object</li>
+					</ul>
+					The ground truth video can be downloaded <a href="videos/room_orig.avi">here</a>.
+				</p>
+				
+				<h2>Motion Vector Technique</h2>
+                <p>
+					In our <a href="videos/room_flow.avi">video</a> of the test sequence one can see that this method has problems dealing with rotation, scaling to some extend and rapid color changes in general, due to the nature of the non-local means algorithm. This is especially visible in the third scene where all those problems lead to incoherent motion vectors across the transparent cube.
+				</p>
+				
+				<h2>Pixel Similarity Technique</h2>
+                <p> 
+					The result looks can be seen in <a href="videos/room_outg.avi">this video</a>.<br/>
+					As one can see this method does not suffer from the problems of the previous technique as much. However, some discontinuities can be observed around the edges of fast moving objects.
+				</p>
+                
+            </dd>
+			
+            <dd class="clear"></dd>
+			
+            <dt style="height: 610px;">Renderer</dt>
+            <dd>
+                <h2>Features <span>Whats possible</span></h2>
+                <p> The geometry in the render is described via distance estimators. This allows for distorted, merged and fractal objects. The renderer features diffuse, transparent and reflective surfaces. As for optimizations I implemented BRDF(Phong) importance sampling as well as light source importance sampling.</p>
+				
+				<h2>Multi-Core <span>160 threads</span></h2>
+                <p> The rendering software runs on a machine with 80 CPUs with hyper threading, which results in 160 parallel threads possible. The multi-threading is done via the C++11 standard library. The following rendering took about 4 hours on that machine, whilst a frame for the test sequence finished in around 13 minutes: <br/>
+				<a href="images/mandelbox.png"><img src="images/mandelbox.png" alt="mandelbox" width="100%" height="100%"/></a>
+				</p>                
+            </dd>
+
+        </dl>
+        
+        <div class="clear"></div>
+    
+    </div>
+
+</body>
+
+</html>
